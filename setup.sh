@@ -61,7 +61,7 @@ check_deps() {
 		printf '     %sinstall with: sudo apt install xfce4-genmon-plugin%s\n' "$c_dim" "$c_0"
 	fi
 
-	if fc-list : family 2>/dev/null | grep -qi 'nerd font'; then
+	if [ -n "$(fc-list : family 2>/dev/null | grep -i 'nerd font' | head -1 || true)" ]; then
 		ok "a Nerd Font is installed"
 	else
 		warn "no Nerd Font found - OS glyphs will render as boxes"
@@ -156,7 +156,7 @@ add_panel_plugin() {
 
 	local font
 	font=$(fc-list : family 2>/dev/null | tr ',' '\n' | grep -i 'nerd font' \
-		| grep -iv 'mono$' | head -1 | sed 's/^ *//;s/ *$//')
+		| grep -iv 'mono$' | sed -n '1p' | sed 's/^ *//;s/ *$//')
 	[ -n "$font" ] || font="JetBrainsMono Nerd Font"
 
 	xfconf-query -c xfce4-panel -p "/plugins/plugin-$id/command" \
@@ -177,14 +177,23 @@ add_panel_plugin() {
 manual_instructions() {
 	cat <<EOF
 
-  ${c_b}Add the widget by hand:${c_0}
+  ${c_b}ACTION REQUIRED - add the widget to your panel yourself:${c_0}
 
-    1. Right-click the panel  ->  Panel  ->  Add New Items
-    2. Pick ${c_b}Generic Monitor${c_0}, then right-click it -> Properties
-    3. Command   ${c_b}cat $CACHE_DIR/status${c_0}
-       Label     ${c_b}unchecked${c_0}
-       Period    ${c_b}10${c_0}
-       Font      ${c_b}JetBrainsMono Nerd Font 11${c_0}
+    1. Right-click your panel  ->  Panel  ->  Add New Items
+    2. Choose ${c_b}Generic Monitor${c_0} and click Add, then Close
+    3. Right-click the new widget  ->  Properties
+    4. Paste this into the ${c_b}Command${c_0} field:
+
+           ${c_ok}${c_b}cat $CACHE_DIR/status${c_0}
+
+    5. Untick ${c_b}Label${c_0}
+    6. Set ${c_b}Period${c_0} to ${c_b}10${c_0}
+    7. Click the font button and pick ${c_b}JetBrainsMono Nerd Font 11${c_0}
+       (without a Nerd Font the OS logo shows as an empty box)
+    8. Save
+
+  Nothing appears until you do this. The widget only reads the cache
+  file - it will show your machine as soon as the command is set.
 
 EOF
 }
