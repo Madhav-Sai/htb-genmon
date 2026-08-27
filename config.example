@@ -1,0 +1,51 @@
+# htb-genmon configuration
+# Sourced by htb-cache as POSIX shell. Restart nothing - the next refresh
+# picks up changes. Run `htb-cache` by hand to see them straight away.
+
+# Absolute path to htb-king. Leave commented to auto-detect via PATH.
+#HTB_BIN=/usr/local/bin/htb-king
+
+# Where the rendered markup is written. The genmon command must match.
+#HTB_CACHE_FILE="$HOME/.cache/htb-genmon/status"
+
+# Font used only for the OS glyph. Must be installed and must match the
+# family name exactly - check with:  fc-list : family | grep -i nerd
+HTB_NERD_FONT="JetBrainsMono Nerd Font"
+
+# ---------------------------------------------------------------- fields ---
+HTB_SHOW_IP=1
+HTB_SHOW_DIFFICULTY=1     # the coloured dot
+HTB_SHOW_STATUS=1         # the OPEN / USER / ROOT badge
+
+# Separator between fields. More spaces = wider gaps.
+HTB_GAP="   "
+
+# ---------------------------------------------------------------- colors ---
+COLOR_NAME="#ffffff"
+COLOR_IP="#cfd8e3"
+COLOR_IDLE="#6b7280"
+
+# difficulty dot
+COLOR_EASY="#6ede8a"
+COLOR_MEDIUM="#f0c674"
+COLOR_HARD="#f28b82"
+COLOR_INSANE="#c9a3ff"
+COLOR_UNKNOWN="#8ab4f8"
+
+# OS glyph, keyed off the logo htb-king returns
+COLOR_WINDOWS="#3aa0ff"
+COLOR_LINUX="#f5c542"
+COLOR_UBUNTU="#e95420"
+COLOR_DEBIAN="#d70a53"
+COLOR_FREEBSD="#ab2b28"
+
+# progress badge
+COLOR_ROOT="#6ede8a"
+COLOR_USER="#f0c674"
+COLOR_OPEN="#6b7280"
+
+# --------------------------------------------------------------- presets ---
+# Nord            name #eceff4  ip #d8dee9  easy #a3be8c  hard #bf616a
+# Gruvbox         name #fbf1c7  ip #d5c4a1  easy #b8bb26  hard #fb4934
+# Catppuccin      name #cdd6f4  ip #bac2de  easy #a6e3a1  hard #f38ba8
+# Tokyo Night     name #c0caf5  ip #a9b1d6  easy #9ece6a  hard #f7768e

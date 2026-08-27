@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 280" width="820" height="280" font-family="JetBrains Mono, DejaVu Sans Mono, Menlo, Consolas, monospace">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#11151c"/>
+      <stop offset="100%" stop-color="#0b0e13"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#6ede8a"/>
+      <stop offset="50%"  stop-color="#3aa0ff"/>
+      <stop offset="100%" stop-color="#c9a3ff"/>
+    </linearGradient>
+    <clipPath id="type1"><rect x="40" y="96" width="340" height="22"><animate attributeName="width" values="0;0;340" keyTimes="0;0.06;0.34" dur="9s" repeatCount="indefinite"/></rect></clipPath>
+    <clipPath id="type2"><rect x="40" y="212" width="300" height="22"><animate attributeName="width" values="0;0;300" keyTimes="0;0.62;0.86" dur="9s" repeatCount="indefinite"/></rect></clipPath>
+  </defs>
+
+  <rect width="820" height="280" rx="14" fill="url(#bg)"/>
+  <rect width="820" height="4" rx="2" fill="url(#accent)"/>
+  <rect x="0.5" y="0.5" width="819" height="279" rx="14" fill="none" stroke="#232a35"/>
+
+  <circle cx="34" cy="34" r="6" fill="#f28b82"/>
+  <circle cx="56" cy="34" r="6" fill="#f0c674"/>
+  <circle cx="78" cy="34" r="6" fill="#6ede8a"/>
+  <text x="410" y="39" fill="#5c6773" font-size="13" text-anchor="middle">madhav@kali — htb-genmon</text>
+
+  <text x="40" y="76" font-size="27" font-weight="700" fill="#e8eaed">htb-genmon</text>
+  <text x="238" y="76" font-size="13" fill="#5c6773">your active HackTheBox target, in the Xfce panel</text>
+
+  <g font-size="15">
+    <text x="40" y="113" fill="#6ede8a">$</text>
+    <g clip-path="url(#type1)">
+      <text x="62" y="113" fill="#cfd8e3">./setup.sh</text>
+    </g>
+    <rect x="66" y="98" width="9" height="18" fill="#6ede8a">
+      <animate attributeName="x" values="66;66;168" keyTimes="0;0.06;0.34" dur="9s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0;1;0;1;0;1;0;1;1;0" dur="9s" repeatCount="indefinite"/>
+    </rect>
+  </g>
+
+  <g opacity="1">
+    <animate attributeName="opacity" values="0;0;1;1;1" keyTimes="0;0.36;0.44;0.95;1" dur="9s" repeatCount="indefinite"/>
+    <text x="40" y="143" font-size="13" fill="#6ede8a">ok</text>
+    <text x="70" y="143" font-size="13" fill="#8b98a9">dependencies verified</text>
+    <text x="40" y="164" font-size="13" fill="#6ede8a">ok</text>
+    <text x="70" y="164" font-size="13" fill="#8b98a9">systemd user timer enabled</text>
+    <text x="40" y="185" font-size="13" fill="#6ede8a">ok</text>
+    <text x="70" y="185" font-size="13" fill="#8b98a9">genmon widget added to the panel</text>
+  </g>
+
+  <g font-size="15" opacity="1">
+    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.6;0.66;1" dur="9s" repeatCount="indefinite"/>
+    <text x="40" y="229" fill="#6ede8a">$</text>
+    <g clip-path="url(#type2)">
+      <text x="62" y="229" fill="#cfd8e3">htb-cache</text>
+    </g>
+  </g>
+
+  <g opacity="1">
+    <animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.88;0.94;1" dur="9s" repeatCount="indefinite"/>
+    <rect x="200" y="212" width="322" height="30" rx="6" fill="#161b22" stroke="#232a35"/>
+    <circle cx="222" cy="227" r="6" fill="#3aa0ff"/>
+    <text x="240" y="232" font-size="13" font-weight="700" fill="#ffffff">Resolute</text>
+    <text x="312" y="232" font-size="13" fill="#cfd8e3">10.129.96.155</text>
+    <circle cx="424" cy="227" r="4" fill="#f0c674"/>
+    <text x="442" y="232" font-size="12" font-weight="700" fill="#6ede8a">ROOT</text>
+  </g>
+</svg>

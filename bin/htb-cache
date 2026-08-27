@@ -1,0 +1,164 @@
+#!/bin/sh
+# htb-cache - query the active HackTheBox machine and render genmon markup.
+#
+# Writes Pango markup to $HTB_CACHE_FILE. The Xfce genmon plugin reads that
+# file, which keeps the panel responsive even when the HTB API is slow.
+#
+# Part of htb-genmon: https://github.com/Madhav-Sai/htb-genmon
+
+set -u
+
+# ---------------------------------------------------------------- config ----
+CONF="${XDG_CONFIG_HOME:-$HOME/.config}/htb-genmon/config"
+[ -r "$CONF" ] && . "$CONF"
+
+: "${HTB_CACHE_FILE:=${XDG_CACHE_HOME:-$HOME/.cache}/htb-genmon/status}"
+: "${HTB_NERD_FONT:=JetBrainsMono Nerd Font}"
+: "${HTB_SHOW_IP:=1}"
+: "${HTB_SHOW_DIFFICULTY:=1}"
+: "${HTB_SHOW_STATUS:=1}"
+: "${HTB_GAP:=   }"
+
+: "${COLOR_NAME:=#ffffff}"
+: "${COLOR_IP:=#cfd8e3}"
+: "${COLOR_IDLE:=#6b7280}"
+: "${COLOR_EASY:=#6ede8a}"
+: "${COLOR_MEDIUM:=#f0c674}"
+: "${COLOR_HARD:=#f28b82}"
+: "${COLOR_INSANE:=#c9a3ff}"
+: "${COLOR_UNKNOWN:=#8ab4f8}"
+: "${COLOR_WINDOWS:=#3aa0ff}"
+: "${COLOR_LINUX:=#f5c542}"
+: "${COLOR_UBUNTU:=#e95420}"
+: "${COLOR_DEBIAN:=#d70a53}"
+: "${COLOR_FREEBSD:=#ab2b28}"
+: "${COLOR_ROOT:=#6ede8a}"
+: "${COLOR_USER:=#f0c674}"
+: "${COLOR_OPEN:=#6b7280}"
+
+mkdir -p "$(dirname "$HTB_CACHE_FILE")" 2>/dev/null || true
+
+# ------------------------------------------------------------- helpers -----
+emit() {
+	tmp="$HTB_CACHE_FILE.$$"
+	cat > "$tmp"
+	mv -f "$tmp" "$HTB_CACHE_FILE"
+}
+
+idle() {
+	printf '<txt><span foreground="%s">%s</span></txt>\n<tool>%s</tool>\n' \
+		"$COLOR_IDLE" "$1" "$2" | emit
+	exit 0
+}
+
+# xml-escape a value before it goes into Pango markup
+esc() {
+	printf '%s' "$1" | sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g'
+}
+
+# ------------------------------------------------------------- resolve ------
+HTB_BIN="${HTB_BIN:-$(command -v htb-king 2>/dev/null || true)}"
+[ -n "$HTB_BIN" ] || idle "htb-king missing" "htb-king is not on PATH.
+Set HTB_BIN in $CONF"
+
+raw=$("$HTB_BIN" -a 2>/dev/null | sed -r 's/\x1B\[[0-9;]*[mK]//g')
+[ -n "$raw" ] || idle "HTB idle" "No active machine, or htb-king returned nothing."
+
+get() {
+	printf '%s\n' "$raw" | awk -F': *' -v k="$1" \
+		'$1==k { sub(/[ ,\t]+$/, "", $2); print $2; exit }'
+}
+
+name=$(get "Name")
+ip=$(get "IP Address")
+diff=$(get "Difficulty")
+points=$(get "Points")
+upwn=$(get "User Pwned")
+rpwn=$(get "Root Pwned")
+
+[ -n "$ip" ] || idle "HTB idle" "No machine currently spawned."
+
+# ------------------------------------------------------- split name/icon ----
+# htb-king appends a Nerd Font OS glyph to the machine name. Peel it off the
+# end so the name and the logo can be styled independently.
+icon=$(printf '%s' "$name" | awk '{
+	k = split($0, p, " ")
+	if (k > 1 && p[k] ~ /[^ -~]/) print p[k]
+}')
+box=$(printf '%s' "$name" | awk '{
+	k = split($0, p, " ")
+	if (k > 1 && p[k] ~ /[^ -~]/) {
+		s = p[1]
+		for (i = 2; i < k; i++) s = s " " p[i]
+		print s
+	} else print $0
+}')
+
+# Match on the codepoint, never on a literal glyph. Keeping raw glyphs out of
+# shell syntax means nothing breaks if the file is copied through a terminal
+# or editor that mangles wide characters.
+# NOTE: od -tx4 would byte-swap on little-endian hosts, so read byte-wise
+# and keep the first four bytes of the UCS-4BE encoding.
+cp=$(printf '%s' "$icon" | iconv -f UTF-8 -t UCS-4BE 2>/dev/null \
+	| od -An -tx1 | tr -d ' \n' | cut -c1-8)
+
+case "$cp" in
+	*f17a|*f05b3|*e70f)   os_color="$COLOR_WINDOWS" ; os_name="Windows" ;;
+	*f17c|*f033d|*1f427)  os_color="$COLOR_LINUX"   ; os_name="Linux"   ;;
+	*f31b|*f0548)         os_color="$COLOR_UBUNTU"  ; os_name="Ubuntu"  ;;
+	*f306|*f0a0a)         os_color="$COLOR_DEBIAN"  ; os_name="Debian"  ;;
+	*f30c|*f08e0)         os_color="$COLOR_FREEBSD" ; os_name="FreeBSD" ;;
+	*)                    os_color="$COLOR_UNKNOWN" ; os_name="Unknown" ;;
+esac
+[ -n "$icon" ] || os_color="$COLOR_UNKNOWN"
+
+case "$diff" in
+	Easy)   diff_color="$COLOR_EASY"    ;;
+	Medium) diff_color="$COLOR_MEDIUM"  ;;
+	Hard)   diff_color="$COLOR_HARD"    ;;
+	Insane) diff_color="$COLOR_INSANE"  ;;
+	*)      diff_color="$COLOR_UNKNOWN" ;;
+esac
+
+if [ "$rpwn" = "true" ]; then
+	badge="ROOT" ; badge_color="$COLOR_ROOT"
+elif [ "$upwn" = "true" ]; then
+	badge="USER" ; badge_color="$COLOR_USER"
+else
+	badge="OPEN" ; badge_color="$COLOR_OPEN"
+fi
+
+[ "$upwn" = "true" ] && u="yes" || u="no"
+[ "$rpwn" = "true" ] && r="yes" || r="no"
+
+# --------------------------------------------------------------- render ----
+NF=$(esc "$HTB_NERD_FONT")
+e_icon=$(esc "$icon")
+[ -n "$e_icon" ] || e_icon="&#9679;"   # entity, must not be re-escaped
+e_box=$(esc "$box")
+e_ip=$(esc "$ip")
+
+line="<span font_family=\"$NF\" foreground=\"$os_color\">$e_icon</span>"
+line="$line$HTB_GAP<span foreground=\"$COLOR_NAME\" weight=\"bold\">$e_box</span>"
+
+[ "$HTB_SHOW_IP" = "1" ] && \
+	line="$line$HTB_GAP<span foreground=\"$COLOR_IP\">$e_ip</span>"
+
+[ "$HTB_SHOW_DIFFICULTY" = "1" ] && \
+	line="$line$HTB_GAP<span foreground=\"$diff_color\">&#9679;</span>"
+
+[ "$HTB_SHOW_STATUS" = "1" ] && \
+	line="$line$HTB_GAP<span foreground=\"$badge_color\" size=\"8500\" weight=\"bold\">$badge</span>"
+
+{
+	printf '<txt>%s</txt>\n' "$line"
+	printf '<tool>%s\n' "$(esc "$box")"
+	printf 'os          %s\n' "$os_name"
+	printf 'difficulty  %s\n' "${diff:-unknown}"
+	[ -n "$points" ] && printf 'points      %s\n' "$points"
+	printf 'address     %s\n' "$e_ip"
+	printf 'user pwned  %s\n' "$u"
+	printf 'root pwned  %s\n' "$r"
+	printf '\nclick to copy the IP</tool>\n'
+	printf '<click>printf %%s "%s" | xclip -selection clipboard</click>\n' "$ip"
+} | emit

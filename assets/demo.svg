@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 150" width="760" height="150" font-family="JetBrains Mono, DejaVu Sans Mono, Menlo, Consolas, monospace">
+  <defs>
+    <linearGradient id="panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1b2130"/>
+      <stop offset="100%" stop-color="#151a26"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="760" height="150" rx="12" fill="#0b0e13"/>
+  <text x="24" y="30" font-size="12" fill="#5c6773">xfce4-panel</text>
+
+  <rect x="24" y="44" width="712" height="42" rx="7" fill="url(#panel)" stroke="#252c3a"/>
+  <text x="44" y="70" font-size="13" fill="#5c6773">3  4</text>
+  <rect x="92" y="54" width="1" height="22" fill="#2c3444"/>
+
+  <!-- rooted Windows box -->
+  <g opacity="1">
+    <animate attributeName="opacity" values="0;1;1;0;0;0;0" keyTimes="0;0.04;0.28;0.32;1;1;1" dur="12s" repeatCount="indefinite"/>
+    <circle cx="120" cy="65" r="6.5" fill="#3aa0ff"/>
+    <text x="142" y="70" font-size="13.5" font-weight="700" fill="#ffffff">Resolute</text>
+    <text x="216" y="70" font-size="13.5" fill="#cfd8e3">10.129.96.155</text>
+    <circle cx="330" cy="65" r="4.5" fill="#f0c674"/>
+    <text x="348" y="70" font-size="12" font-weight="700" fill="#6ede8a">ROOT</text>
+  </g>
+
+  <!-- user-owned Linux box -->
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1;0;0;0" keyTimes="0;0.33;0.37;0.61;0.65;1;1" dur="12s" repeatCount="indefinite"/>
+    <circle cx="120" cy="65" r="6.5" fill="#f5c542"/>
+    <text x="142" y="70" font-size="13.5" font-weight="700" fill="#ffffff">Cascade</text>
+    <text x="212" y="70" font-size="13.5" fill="#cfd8e3">10.10.11.42</text>
+    <circle cx="312" cy="65" r="4.5" fill="#f28b82"/>
+    <text x="330" y="70" font-size="12" font-weight="700" fill="#f0c674">USER</text>
+  </g>
+
+  <!-- fresh box -->
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;0;1;1;0;0" keyTimes="0;0.62;0.66;0.7;0.86;0.9;1" dur="12s" repeatCount="indefinite"/>
+    <circle cx="120" cy="65" r="6.5" fill="#e95420"/>
+    <text x="142" y="70" font-size="13.5" font-weight="700" fill="#ffffff">Sightless</text>
+    <text x="224" y="70" font-size="13.5" fill="#cfd8e3">10.10.11.32</text>
+    <circle cx="324" cy="65" r="4.5" fill="#6ede8a"/>
+    <text x="342" y="70" font-size="12" font-weight="700" fill="#6b7280">OPEN</text>
+  </g>
+
+  <!-- idle -->
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;0;0;1;1;0" keyTimes="0;0.87;0.88;0.9;0.94;0.99;1" dur="12s" repeatCount="indefinite"/>
+    <text x="112" y="70" font-size="13.5" fill="#6b7280">HTB idle</text>
+  </g>
+
+  <text x="620" y="70" font-size="13" fill="#5c6773">18:43</text>
+
+  <g font-size="11.5" fill="#5c6773">
+    <text x="24" y="116">glyph = OS</text>
+    <text x="150" y="116">dot = difficulty</text>
+    <text x="300" y="116">badge = progress</text>
+    <text x="452" y="116">click = copy IP</text>
+    <text x="596" y="116">hover = details</text>
+  </g>
+</svg>

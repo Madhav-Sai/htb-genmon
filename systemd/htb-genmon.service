@@ -1,0 +1,7 @@
+[Unit]
+Description=Refresh the htb-genmon panel cache
+Documentation=https://github.com/Madhav-Sai/htb-genmon
+
+[Service]
+Type=oneshot
+ExecStart=@BIN@
