@@ -10,6 +10,7 @@ set -u
 
 # ---------------------------------------------------------------- config ----
 CONF="${XDG_CONFIG_HOME:-$HOME/.config}/htb-genmon/config"
+# shellcheck source=/dev/null  # user config, path resolved at runtime
 [ -r "$CONF" ] && . "$CONF"
 
 : "${HTB_CACHE_FILE:=${XDG_CACHE_HOME:-$HOME/.cache}/htb-genmon/status}"

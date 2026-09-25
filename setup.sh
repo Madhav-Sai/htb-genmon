@@ -92,6 +92,7 @@ install_files() {
 	case ":$PATH:" in
 		*":$BIN_DIR:"*) : ;;
 		*) warn "$BIN_DIR is not on your PATH"
+		   # shellcheck disable=SC2016  # print $HOME literally for the user to copy
 		   printf '     %sadd: export PATH="$HOME/.local/bin:$PATH"%s\n' "$c_dim" "$c_0" ;;
 	esac
 }
